@@ -76,3 +76,33 @@ theres a chance that because this is for arm, intel (like intel) dont like that.
 so lets ask the chat to confirm that theory, and ask him for solutions as well
 
 so the chat said that the best thing to do is to use qemu, so we will use it on the WSL
+so first of all lets install qemu and related stuff :)
+```
+sudo apt update
+sudo apt install qemu ovmf
+sudo apt install qemu-system-arm qemu-efi-aarch64
+```
+the first thing we need to do is to make sure its ARM:
+```
+$ file Windows10_15035_SurfaceRT_08-01-2024_15-23-54.iso
+Windows10_15035_SurfaceRT_08-01-2024_15-23-54.iso: ISO 9660 CD-ROM filesystem data 'WIN_10_ARM' (bootable)
+```
+amazing :)
+now we will need to create a disk for the machine, to do it we can run the command:
+```
+qemu-img create -f qcow2 arm_disk.qcow2 20G
+```
+now we need to run it, to do so we will run this command (yes, sadly its one command)
+```
+qemu-system-arm \
+  -M virt \
+  -cpu cortex-a15 \
+  -m 2048 \
+  -cdrom WindowsRT.iso \
+  -drive file=arm_disk.qcow2,format=qcow2
+
+```
+but sadly, now we got stuck at the UEFI shell of qemu
+so after a lot of searching, and nothing good, for now we will wait (like we have windows XP embedded out) that soon enough it will be easy to get VMDK of the Windows 10 Embedded Version
+# Conclusion
+its probably possible to hack it, but soon we will get the VMDK and we will manage to run the Real Embedded and not the Win10RT we got now :)
